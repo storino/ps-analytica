@@ -66,19 +66,14 @@ def album_info():
     album_year, latest_album  = get_latest_album(albums_info['album'])
 
     tracks_info = get(f'http://theaudiodb.com/api/v1/json/2/track.php?m={latest_album["idAlbum"]}').json()
-    track1 = tracks_info['track'][0]['strTrack']
-    track2 = tracks_info['track'][1]['strTrack']
-    track3 = tracks_info['track'][2]['strTrack']
+    tracks = [tracks_info['track'][i]['strTrack'] for i in range(len(tracks_info['track']))]
+
 
     response = {
         "artist": artist_name,
         "latest_album": latest_album['strAlbum'],
         "album_year": album_year,
-        "album_tracks": {
-            1: track1,
-            2: track2,
-            3: track3
-        }
+        "album_tracks": {i: track for i, track in enumerate(tracks)}
     }
     
     return jsonify(response)
